@@ -39,6 +39,8 @@ jobs:
 
       - name: Cleanup
         uses: rokibhasansagar/slimhub_actions@main
+        with:
+          retain: "powershell"
 
       - name: Initialize workspace
         run: |
@@ -53,14 +55,21 @@ jobs:
           DEBIAN_FRONTEND=noninteractive sudo apt install -yq \
               linux-modules-extra-$(uname -r) \
               git python3 tar aria2
-          wget http://security.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb
-          sudo apt install ./libtinfo5_6.3-2ubuntu0.1_amd64.deb
           git clone https://gitlab.com/OrangeFox/misc/scripts
           cd scripts
           sudo bash setup/android_build_env.sh
           sed -i 's/cd -/cd ../g' setup/install_android_sdk.sh
           sudo bash setup/install_android_sdk.sh
         working-directory: ${{ steps.pwd.outputs.workspace-folder }}
+      
+      - name: Install missing libs
+        run: |
+          mkdir libs
+          cd libs
+          wget http://security.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb
+          wget https://security.ubuntu.com/ubuntu/pool/universe/n/ncurses/libncurses5_6.3-2ubuntu0.1_amd64.deb
+          sudo dpkg -i ./*.deb
+          sudo apt --fix-broken install
 
       - name: Use Python2
         uses: MatteoH2O1999/setup-python@v6
