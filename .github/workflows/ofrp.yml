@@ -65,7 +65,7 @@ jobs:
       - name: Use Python2
         uses: MatteoH2O1999/setup-python@v6
         with:
-          python-version: '2.7.6'
+          python-version: '2'
           check-latest: true
           allow-build: info
           cache-build: true
