@@ -70,8 +70,8 @@ jobs:
         run: |
           cd ${{ steps.pwd.outputs.workspace-folder }}
           git clone ${{ env.SYNC_URL }}
-          cd sync
-          ./orangefox_sync.sh --branch ${{ env.MANIFEST_BRANCH }} --path ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ env.MANIFEST_BRANCH }}
+          cd sync/legacy
+          ./orangefox_sync_legacy.sh --branch ${{ env.MANIFEST_BRANCH }} --path ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ env.MANIFEST_BRANCH }}
         working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
       - name: Clone device tree
