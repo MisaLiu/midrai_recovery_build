@@ -49,8 +49,10 @@ jobs:
 
       - name: Prepare the build environment
         run: |
-          sudo apt-get update
-          sudo apt-get install git aria2
+          sudo apt update && sudo apt upgrade -y
+          DEBIAN_FRONTEND=noninteractive sudo apt install -yq \
+              linux-modules-extra-$(uname -r) \
+              git python3 tar aria2
           git clone https://gitlab.com/OrangeFox/misc/scripts
           cd scripts
           sudo bash setup/android_build_env.sh
@@ -58,12 +60,18 @@ jobs:
           sudo bash setup/install_android_sdk.sh
         working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
+      - name: Install OpenJDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
       - name: Sync OrangeFox sources and minimal manifest
         run: |
           cd ${{ steps.pwd.outputs.workspace-folder }}
           git clone ${{ env.SYNC_URL }}
-          cd sync/legacy
-          ./orangefox_sync_legacy.sh --branch ${{ env.MANIFEST_BRANCH }} --path ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ env.MANIFEST_BRANCH }}
+          cd sync
+          ./orangefox_sync.sh --branch ${{ env.MANIFEST_BRANCH }} --path ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ env.MANIFEST_BRANCH }}
         working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
       - name: Clone device tree
@@ -76,10 +84,6 @@ jobs:
         uses: pierotofy/set-swap-space@master
         with:
           swap-size-gb: 12
-
-      - name: Switch to Python2
-        run: sudo apt-get install python2 python-is-python2
-        continue-on-error: true
 
       - name: Building recovery
         run: |
