@@ -39,6 +39,8 @@ jobs:
 
       - name: Cleanup
         uses: rokibhasansagar/slimhub_actions@main
+        with:
+          retain: "powershell"
 
       - name: Initialize workspace
         run: |
