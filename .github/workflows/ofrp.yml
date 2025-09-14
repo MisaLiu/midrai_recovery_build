@@ -16,7 +16,7 @@ jobs:
       contents: write
     strategy:
       matrix:
-        DEVICE_NAME: [ Archytas, Archimedes ]
+        DEVICE_NAME: [ Archimedes ]
     env:
       DEVICE_TREE_BRANCH: ${{ matrix.DEVICE_NAME }}
       DEVICE_PATH: "device/xiaomi/${{ matrix.DEVICE_NAME }}"
